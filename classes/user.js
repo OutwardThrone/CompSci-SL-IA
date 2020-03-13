@@ -9,7 +9,6 @@ export default class User {
         this.password = password;
         this.name = name || "";
         
-        
     }
 
     
@@ -95,7 +94,7 @@ export default class User {
         return uploadRes
     }
 
-    async retrieveCourses() {
+    async retrieveCourses(availableCourses) {
         const inFireStore = await this.userInFirestore()
         if (!inFireStore) {
             //person not in database
@@ -103,7 +102,13 @@ export default class User {
             return []
         } else {
             //person in database
-            let currentCourses = await this.getCurrentCourses()
+            let currentCourseIds = await this.getCurrentCourses()
+            let currentCourses = [];
+            for (let indivCourse of availableCourses) {
+                if (currentCourseIds.includes(indivCourse.id)) {
+                    currentCourses.push(indivCourse);
+                }
+            }
             return currentCourses
         }
     }

@@ -14,7 +14,7 @@ class ProfilePage extends React.Component {
         const {query, req} = ctx
         const u = cookies(ctx).currentUser || await JSON.parse(decodeURIComponent(query.user))
         const currentUser = new User(u.email, u.password, u.name)
-        const courses = await currentUser.retrieveCourses()
+        const courses = await currentUser.retrieveCourses(ctx.availableCourses)
         return {user: u, courses: courses}//{name: query.name, email: query.email, password: query.password}
     }
 
