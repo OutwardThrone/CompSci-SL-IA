@@ -15,7 +15,7 @@ const CourseInfo = props => {
                     return (
                         <Link href="/courses/[id]" as={`/courses/${courseAndInCourse[0].id}`} key={courseAndInCourse[0].id}>
                             <div className="course" id={courseAndInCourse[0].id} >
-                                <div className="course-name">{courseAndInCourse[0].name}  {courseAndInCourse[1] ? <Badge pill color="success">Enrolled</Badge> : <></>}</div>
+                                <div className="course-name">{courseAndInCourse[0].name}  {courseAndInCourse[1] ? <Badge key={courseAndInCourse[0].id} pill color="success" >Enrolled</Badge> : <></>}</div>
                                 <p>{courseAndInCourse[0].description || "no desc"}</p>
                             </div>
                         </Link>
