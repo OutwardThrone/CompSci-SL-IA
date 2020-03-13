@@ -1,0 +1,116 @@
+.nav * {
+    color: grey;
+}
+
+.nav *:hover {
+    color: grey;
+    text-decoration: none;
+    background: black;
+    cursor: pointer;
+}
+
+.course {
+    color: black !important;
+    background-color: white;
+    margin: 5px;
+    border: 2px solid black;
+    padding: 20px;
+}
+
+.caps-only {
+    text-transform: uppercase;
+}
+
+.course:hover {
+    border: 5px solid rgb(154, 252, 255);
+    cursor: pointer;
+}
+
+.course-name {
+    font-weight: bold;
+    text-transform: capitalize;
+    font-size: 25px;
+}
+
+.home-header {
+    text-decoration: underline;
+}
+
+.unenroll-button {
+    margin-top: 15px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.course-description {
+    margin: 15px;
+
+}
+
+.course * {
+    color: black !important;
+    background-color: white;
+}
+
+.base {
+    background-image: linear-gradient(rgba(108, 121, 179, 0.432), rgba(0, 0, 0, 0.589)), url("../imgs/vectors.jpg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    padding-left: 15vw;
+    padding-right: 15vw;
+    padding-top: 20px;
+    width: auto;
+    height: 100vh;
+}
+
+.base * {
+    color: white;
+}
+
+.submission-form {
+    color: black;
+    background-color: white;
+    padding: 20px;
+    border: 2px solid black;
+}
+
+.submission-form * {
+    color: black;
+    margin: 5px;
+}
+
+.inner-text {
+    color: black;
+    background-color: white;
+    padding: 20px;
+    border: 2px solid black;
+}
+
+.inner-text * {
+    color: black;
+}
+
+.profile-title {
+    font-size: 30px;
+}
+
+.profile-info {
+    margin-top: 20px;
+    margin-left: 20px;
+    font-size: 20px;
+}
+
+.profile-info .left {
+    background-color: rgb(104, 104, 104);
+    color: white;
+    outline: 1px solid rgb(0, 0, 0);
+    padding: 10px;
+    padding-left: 30px;
+}
+
+.profile-info .right {
+    outline: 1px solid black;
+    padding: 10px;
+    padding-left: 30px;
+}
