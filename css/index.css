@@ -36,6 +36,18 @@
     text-decoration: underline;
 }
 
+.file-view-name {
+    margin-top: 10px;
+}
+
+.file-view {
+    margin: 15px;
+}
+
+.file-button {
+    margin: 5px;
+}
+
 .unenroll-button {
     margin-top: 15px;
     display: flex;

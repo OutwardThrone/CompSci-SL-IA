@@ -10,7 +10,7 @@ const HomePage = props => {
             Sriram's coding class is a personal class that is just starting up. He has had experience teaching his two sons and many students in the Sammamish area.<br/>
             We recommend these courses for middle schoolers looking to get a headstart on high school. Coding is an invaluable skill and most students will love it.
             <h2 className="home-header">Contact Info</h2>
-            Email: sriramperi@gmail.com
+            Email: sriramperi@gmail.com<br/>
             Location: Sammamish, WA, USA
             
         </div>

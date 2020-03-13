@@ -3,7 +3,7 @@ import Course from "../../classes/course"
 import User from "../../classes/user"
 import { Button, Form, FormGroup, Label, Input, FormText } from "reactstrap"
 import Router from "next/router"
-import { storage, firebase } from "../../firebase"
+import { storage } from "../../firebase"
 global.XMLHttpRequest = require("xhr2");
 
 
@@ -19,7 +19,6 @@ export default class IndividualCourse extends React.Component {
         this.unenrollUser = this.unenrollUser.bind(this);
         this.onChangeHandler = this.onChangeHandler.bind(this)
         this.uploadFile = this.uploadFile.bind(this)
-        this.getCourseFiles = this.getCourseFiles.bind(this)
     }
 
     unenrollUser() {
@@ -46,39 +45,25 @@ export default class IndividualCourse extends React.Component {
         }
     }
 
-    async getCourseFiles() {
-        const fileComponent = {}
-        const courseRef = storage.ref(`courseFileUploads`).child(this.state.course.id.toString())
-        return await courseRef.listAll().then(async function (courseFolder) {
-            if (courseFolder.prefixes.length > 0) {
-                courseFolder.prefixes.map(userFolder => {
-                    console.log(userFolder.name)
-                    fileComponent[userFolder.name] = {}
-                    return (
-                        <div>
-                            {userFolder.name}
-                        </div>
-                    )
-                    /*await userFolder.listAll().then(async function(userItems) {
-                        userItems.items.forEach(async function(item) {
-                            await item.getDownloadURL().then(res => {
-                                console.log(res)
-                                fileComponent[userFolder.name][item.name] = res
-                            })
-                        })
-                    })*/
-                })
-            }
-        }).catch(e => {
-            console.log('error viewing admin items', e)
-        })
-    }
-
     render() {
 
         const adminItems = this.props.isAdmin ?
             <div>
-                Student Submitted Files
+                <h5>Student Submitted Files</h5>
+                {this.props.uploadedFiles.map(file => {
+                    return (
+                        <>
+                            <div className="file-view-name" key={`${file[0]}`}>{file[0]}'s uploaded files</div>
+                            <div className="file-view">
+                                {file[1].map((url, index) => {
+                                    return (
+                                        <Button className="file-button" key={index} href={url} color="primary" target="_blank" >{index+1}</Button>
+                                    )
+                                })}
+                            </div>
+                        </>
+                    )
+                })}
             </div>
             : <></>
 
@@ -128,28 +113,23 @@ export default class IndividualCourse extends React.Component {
         }
 
         //get storage files
-
-        let fileComponent = {}
-        let files = []
-        console.log(1)
-        await storage.ref(`courseFileUploads`).child(targetCourse.id.toString()).list().then(courseFolder => {
-            if (courseFolder.prefixes.length > 0) {
-                courseFolder.prefixes.forEach(async userFolder => {
-                    fileComponent[userFolder.name] = []
-                    console.log(2)
-                    const userItems = await userFolder.list()
-                    userItems.items.forEach(async item => {
-                        console.log(3)
-                        const downloadURL = await item.getDownloadURL()
-                        fileComponent[userFolder.name].push(downloadURL)
+        let fileComponent = []
+        if (User.isAdmin(ctx.currentUser.email)) {
+            await storage.ref(`courseFileUploads`).child(targetCourse.id.toString()).list().then(async courseFolder => {
+                while (courseFolder.prefixes.length > 0) {
+                    let userFolder = courseFolder.prefixes.pop()
+                    fileComponent.push([userFolder.name, []])
+                    await userFolder.list().then(async userItems => {
+                        for (let item of userItems.items) {
+                            await item.getDownloadURL().then(downloadURL => {
+                                fileComponent[fileComponent.length-1][1].push(downloadURL)
+                            })
+                        }
                     })
-                })
-            }
-        })
-        console.log(4)
-        console.log(files)
-        console.log(fileComponent)
+                }
+            })
+        }
 
-        return { course: targetCourse, userInCourse: userInCourse }
+        return { course: targetCourse, userInCourse: userInCourse, uploadedFiles: fileComponent}
     }
 }

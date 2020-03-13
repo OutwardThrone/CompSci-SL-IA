@@ -82,13 +82,14 @@ class NavigationBar extends React.Component {
                         <Nav className={`ml-auto nav navbar-right`}>
                             {this.userLoggedIn() ? (
                                 <>
+                                {!User.isAdmin(this.props.currentUser.email) ? 
                                     <NavItem>
                                         <NavLink>
                                             <Link href="/enroll">
                                                 <a>Course Enrollment</a>
                                             </Link>
                                         </NavLink>
-                                    </NavItem>
+                                    </NavItem> : <></> }
                                     <NavItem>
                                         <NavLink>
                                             <Link href="/profile">
