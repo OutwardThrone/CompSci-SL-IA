@@ -77,8 +77,10 @@ export default class IndividualCourse extends React.Component {
                     </FormGroup>
                     <Button color="success" onClick={this.uploadFile}>Submit</Button>
                 </Form>
-                <div className="unenroll-button">
-                    <Button color="danger" onClick={this.unenrollUser}>Unenroll from course</Button>
+                
+                <div className="bottom-buttons">
+                    <Button color="primary" className="back-button" href="/courseinfo" >Back to course list</Button>
+                    <Button color="danger" className="unenroll-button" onClick={this.unenrollUser}>Unenroll from course</Button>
                 </div>
             </div>
             :
@@ -90,6 +92,7 @@ export default class IndividualCourse extends React.Component {
                 <div className="course-description">{this.props.course.description}</div>
                 {enrolledUserItems}
                 {adminItems}
+                {!this.props.userInCourse || this.props.isAdmin ? <Button color="primary" className="back-button" href="/courseinfo" >Back to course list</Button> : <></>}
             </div>
         )
     }
