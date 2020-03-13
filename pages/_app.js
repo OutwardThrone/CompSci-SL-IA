@@ -7,7 +7,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "../css/index.css";
 import { render } from 'react-dom';
 import User from '../classes/user';
-import {parseCookies} from '../lib/parseCookies.js'
 import cookies from 'next-cookies';
 import { firestore } from '../firebase';
 import Course from '../classes/course.js';

@@ -50,14 +50,14 @@ export default class IndividualCourse extends React.Component {
         const adminItems = this.props.isAdmin ?
             <div>
                 <h5>Student Submitted Files</h5>
-                {this.props.uploadedFiles.map(file => {
+                {this.props.uploadedFiles.map(userFile => {
                     return (
                         <>
-                            <div className="file-view-name" key={`${file[0]}`}>{file[0]}'s uploaded files</div>
+                            <div className="file-view-name" key={`${userFile[0]}`}><b>{userFile[0]}</b>'s files</div>
                             <div className="file-view">
-                                {file[1].map((url, index) => {
+                                {userFile[1].map((indivFile, index) => {
                                     return (
-                                        <Button className="file-button" key={index} href={url} color="primary" target="_blank" >{index+1}</Button>
+                                        <Button className="file-button" key={index} href={indivFile[1]} color="primary" target="_blank" >{indivFile[0]}</Button>
                                     )
                                 })}
                             </div>
@@ -71,7 +71,7 @@ export default class IndividualCourse extends React.Component {
             <div className="logged-in-course-options" >
                 <Form>
                     <FormGroup>
-                        <Label for="fileSubmission">Submit a file</Label><br />
+                        <Label for="fileSubmission"><b>Submit a file</b></Label><br />
                         <Input type="file" name="fileSubmission" id="fileSubmission" onChange={this.onChangeHandler} />
                         <FormText>{this.state.uploadRes}</FormText>
                     </FormGroup>
@@ -88,9 +88,7 @@ export default class IndividualCourse extends React.Component {
             <div className="inner-text">
                 <div className="course-name">{this.props.course.name}</div>
                 <div className="course-description">{this.props.course.description}</div>
-                <br />
                 {enrolledUserItems}
-                <br />
                 {adminItems}
             </div>
         )
@@ -122,13 +120,30 @@ export default class IndividualCourse extends React.Component {
                     await userFolder.list().then(async userItems => {
                         for (let item of userItems.items) {
                             await item.getDownloadURL().then(downloadURL => {
-                                fileComponent[fileComponent.length-1][1].push(downloadURL)
+                                fileComponent[fileComponent.length-1][1].push([item.name, downloadURL])
                             })
                         }
                     })
                 }
             })
         }
+        console.log(fileComponent)
+        /* fileComponent's format
+            [
+                [userName1, [
+                    [fileName1, fileURL1], 
+                    [fileName2, fileURL2], 
+                    [...]
+                ]],
+
+                [userName2, [
+                    [fileName1, fileURL1], 
+                    [fileName2, fileURL2], 
+                    [...]
+                ]]
+            ]
+                
+        */
 
         return { course: targetCourse, userInCourse: userInCourse, uploadedFiles: fileComponent}
     }

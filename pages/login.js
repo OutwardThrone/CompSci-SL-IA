@@ -12,7 +12,7 @@ import Cookies from 'js-cookie';
 
 class LoginPage extends React.Component {
 
-    static DEFAULT_STATUS = "missing params"
+    static DEFAULT_STATUS = ""
 
     constructor(props) {
         super(props)
@@ -41,17 +41,17 @@ class LoginPage extends React.Component {
             .catch((error) => {
                 //alert(error.code)
                 console.log(error.code); //https://firebase.google.com/docs/reference/js/firebase.auth.Auth.html?authuser=0#createuserwithemailandpassword
-                if (error.code == "auth/invalid-email") {
-                    return {user: currentUser, emailInvalid: true, passwordInvalid: false, status: "invalid email"} //return {email: query.email, password: query.password, emailInvalid: true, passwordInvalid: false, status: "invalid email"}
-                } else if (error.code == "auth/user-disabled") {
-                    return {user: currentUser, emailInvalid: true, passwordInvalid: false, status: "user disabled"}
-                } else if (error.code == "auth/user-not-found") {
-                    return {user: currentUser, emailInvalid: true, passwordInvalid: false, status: "user not found"}
-                } else if (error.code == "auth/wrong-password") {
-                    return {user: currentUser, emailInvalid: false, passwordInvalid: true, status: "wrong password"}
-                } else {
-                    Cookies.set("testcook", error.code)
-                    return {user: currentUser, emailInvalid: false, passwordInvalid: false, status: error.code}
+                switch (error.code) {
+                    case "auth/invalid-email":
+                        return {user: currentUser, emailInvalid: true, passwordInvalid: false, status: "Invalid Email"}
+                    case "auth/user-disabled":
+                        return {user: currentUser, emailInvalid: true, passwordInvalid: false, status: "user Disabled"}
+                    case "auth/user-not-found":
+                        return {user: currentUser, emailInvalid: true, passwordInvalid: false, status: "User not found"}
+                    case "auth/wrong-password":
+                        return {user: currentUser, emailInvalid: false, passwordInvalid: true, status: "Wrong Password"}
+                    default:
+                        break;
                 }
             });
         }
@@ -80,14 +80,12 @@ class LoginPage extends React.Component {
                         <FormFeedback valid>Valid password</FormFeedback>
                         <FormFeedback invalid>Invalid password</FormFeedback>
                     </FormGroup>
+                    <FormText color="info">{this.props.status}</FormText>
                     <FormGroup>
                         <Button color="secondary" >Log In</Button>
                         <Button color="primary" href="/signup" >Sign Up</Button>
                     </FormGroup>
                 </Form>
-                <div>
-                    {this.state.status}
-                </div>
             </>
         )
     }

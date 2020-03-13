@@ -1,6 +1,5 @@
 import Base from "../components/base";
 import User from "../classes/user";
-import { parseCookies } from "../lib/parseCookies";
 import Router from "next/router";
 import cookies from "next-cookies";
 import { Container, Row, Col, Button } from "reactstrap";
@@ -13,7 +12,6 @@ class ProfilePage extends React.Component {
 
     static async getInitialProps(ctx) {
         const {query, req} = ctx
-       // const cookies = parseCookies(req)
         const u = cookies(ctx).currentUser || await JSON.parse(decodeURIComponent(query.user))
         const currentUser = new User(u.email, u.password, u.name)
         const courses = await currentUser.retrieveCourses()

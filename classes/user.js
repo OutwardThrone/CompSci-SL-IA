@@ -33,35 +33,50 @@ export default class User {
     async isInCourse(course) {
         
         let inCourse = false
-        await firestore.collection('userInfo').doc(this.email).collection('courses').withConverter(Course.courseConverter).get().then(allCourses => {
-            allCourses.forEach(eachCourse => {
-                if (eachCourse.id === course.id) {
-                    inCourse = true;
-                }
-            })
+        await firestore.collection('userInfo').doc(this.email).get().then(doc => {
+            if (doc.get('courseIds')) {
+                inCourse = doc.get('courseIds').includes(course.id)
+            }
         })
         //console.log(`user is ${inCourse ? `in` : `not in`} ${course.name}`)
         return inCourse;
     }
 
+    async getCurrentCourses() {
+        let currentCourses = []
+        await firestore.collection('userInfo').doc(this.email).get().then(doc => {
+            if (doc.get('courseIds')) {
+                currentCourses = doc.get('courseIds')
+            }
+        }).catch(e => {
+            console.log("error retrieving courses", e)
+        })
+        return currentCourses;
+    }
+
     async enrollInCourse(course) {
         console.log(`setting course: ${course.name} to ${this.email}`)
         let isSuccess = true;
-        await firestore.collection('userInfo').doc(this.email).set({}).catch(e => {
-            console.log('set blank doc error', e)
+        let courseIds = await this.getCurrentCourses().catch(e => {
             isSuccess = false;
         })
-        await firestore.collection('userInfo').doc(this.email).collection('courses').withConverter(Course.courseConverter).doc(course.id).set(course).catch(e => {
-            console.log('setting course error', e)
+        courseIds.push(course.id.toString())
+        await firestore.collection('userInfo').doc(this.email).set({
+            'courseIds': courseIds
+        }).catch(e => {
+            console.log("error adding course", e)
             isSuccess = false;
         })
         return isSuccess;
     }
 
     async removeFromCourse(course) {
-        console.log(course.id)
-        await firestore.collection('userInfo').doc(this.email).collection('courses').withConverter(Course.courseConverter).doc(course.id).delete().then(() => {
-            console.log(`removed course: ${course.name} from ${this.email}`)
+        let courseIds = await this.getCurrentCourses()
+        courseIds = courseIds.filter((val, index, arr) => {
+            return val != course.id
+        })
+        await firestore.collection('userInfo').doc(this.email).set({
+            'courseIds': courseIds
         }).catch(e => {
             console.log(`failed in removing course: ${course.name} from ${this.email}`, e)
         })
@@ -69,7 +84,7 @@ export default class User {
 
     async storeFile(course, file) {
         let uploadRes = "Upload Failed"
-        await storage.ref(`courseFileUploads/${course.id}/${this.email}/${file.name}`).put(file).then(uploadSnap => {
+        await storage.ref(`courseFileUploads/${course.id}/${this.name}/${file.name}`).put(file).then(uploadSnap => {
             console.log('upload success')
             uploadRes = "Upload Success!"
         }).catch(e => {
@@ -88,12 +103,7 @@ export default class User {
             return []
         } else {
             //person in database
-            let currentCourses = []
-            await firestore.collection('userInfo').doc(this.email).collection('courses').withConverter(Course.courseConverter).get().then(docs => {
-                docs.forEach(doc => {
-                    currentCourses.push(doc.data())
-                })
-            })
+            let currentCourses = await this.getCurrentCourses()
             return currentCourses
         }
     }

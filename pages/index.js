@@ -1,8 +1,3 @@
-import Base from "../components/base";
-import { parseCookies } from "../lib/parseCookies";
-import User from '../classes/user'
-import cookies from 'next-cookies'
-
 const HomePage = props => {
     return (
         <div className="inner-text">
