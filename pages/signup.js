@@ -1,4 +1,4 @@
-import {Form, Input, FormGroup, Label, Button, FormFeedback} from 'reactstrap';
+import {Form, Input, FormGroup, Label, Button, FormFeedback, FormText } from 'reactstrap';
 import '../css/index.css';
 import Base from '../components/base.js'
 import { useRouter } from "next/router";
