@@ -47,17 +47,17 @@ Enrollment.getInitialProps = async function(ctx) {
     const { courseKey, selectCourse } = query;
     let isInvalidKey, isSuccess = false
     const currentUser = new User(ctx.currentUser.email, ctx.currentUser.password, ctx.currentUser.name)
-    await ctx.availableCourses.forEach((course) => {
+    for (let course of ctx.availableCourses)  {
         if (course.name == selectCourse) {
             if (course.enrollKey.toUpperCase() == courseKey.toUpperCase()) {
                 //add course to user in firestore
-                isSuccess = currentUser.enrollInCourse(course)
-                return;
+                isSuccess = await currentUser.enrollInCourse(course)
+                break;
             } else {
                 isInvalidKey = true
             }
         }
-    })
+    }
     return {invalidKey: isInvalidKey, success: isSuccess, selectedCourse: selectCourse}
 }
 

@@ -45,7 +45,7 @@ class SignUp extends React.Component {
                 }
             })
         }
-        return {user: currentUser, emailInvalid: false, passwordInvalid: false, status: "missing params"}
+        return {user: currentUser, emailInvalid: false, passwordInvalid: false, status: ""}
     }
 
     render() {

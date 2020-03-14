@@ -72,11 +72,11 @@
 }
 
 Button {
-    color: white;
+    color: white !important;
 }
 
 Button * {
-    color: white;
+    color: white !important;
 }
 
 .base {

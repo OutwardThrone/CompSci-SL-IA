@@ -76,7 +76,7 @@ class LoginPage extends React.Component {
                     </FormGroup>
                     <FormGroup>
                         <Label for="password">Password</Label>
-                        <Input type="password" name="password" id="passwordInput" placeholder="Enter a secure password" invalid={this.state.passwordInvalid} />
+                        <Input type="password" name="password" id="passwordInput" placeholder="Enter your password" invalid={this.state.passwordInvalid} />
                         <FormFeedback valid>Valid password</FormFeedback>
                         <FormFeedback invalid>Invalid password</FormFeedback>
                     </FormGroup>
