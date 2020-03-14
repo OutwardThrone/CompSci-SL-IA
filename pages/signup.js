@@ -31,14 +31,17 @@ class SignUp extends React.Component {
                 //return {email: query.email, password: query.password, emailInvalid: false, passwordInvalid: false, status: "success", name: query.name}
             }).catch(error => {
                 //handling
-                if (error.code == "auth/email-already-in-use") {
-                    return {user: currentUser, emailInvalid: true, passwordInvalid: false, status: error.code}
-                } else if (error.code == "auth/invalid-email") {
-                    return {user: currentUser, emailInvalid: true, passwordInvalid: false, status: error.code}
-                } else if (error.code == "auth/operation-not-allowed") {
-                    return {user: currentUser, emailInvalid: false, passwordInvalid: false, status: error.code}
-                } else if (error.code == "auth/weak-password") {
-                    return {user: currentUser, emailInvalid: false, passwordInvalid: true, status: error.code}
+                switch (error.code) {
+                    case "auth/email-already-in-use":
+                        return {user: currentUser, emailInvalid: true, passwordInvalid: false, status: "Email already linked to an account"}
+                    case "auth/invalid-email":
+                        return {user: currentUser, emailInvalid: true, passwordInvalid: false, status: "Invalid Email"}
+                    case "auth/operation-not-allowed":
+                        return {user: currentUser, emailInvalid: false, passwordInvalid: false, status: "An error occured: operation not allowed"}
+                    case "auth/weak-password":
+                        return {user: currentUser, emailInvalid: false, passwordInvalid: true, status: "Weak Password"}
+                    default:
+                        break;
                 }
             })
         }
@@ -65,11 +68,14 @@ class SignUp extends React.Component {
                         <FormFeedback valid>Wrong password</FormFeedback>
                         <FormFeedback invalid>Invalid password</FormFeedback>
                     </FormGroup>
-                    <Button color="secondary" size="sm" href="/login">
-                        <i className="fas fa-long-arrow-alt-left" ></i>
-                        Log In
+                    <FormText color="info">{this.props.status}</FormText>
+                    <FormGroup>
+                        <Button color="secondary" size="sm" href="/login">
+                            <i className="fas fa-long-arrow-alt-left" ></i>
+                            Log In
                         </Button>
-                    <Button color="success">Sign Up</Button>
+                        <Button color="success">Sign Up</Button>
+                    </FormGroup>
                 </Form>
                 <div>
                     {this.props.status}

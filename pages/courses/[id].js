@@ -79,7 +79,7 @@ export default class IndividualCourse extends React.Component {
                 </Form>
                 
                 <div className="bottom-buttons">
-                    <Button color="primary" className="back-button" href="/courseinfo" >Back to course list</Button>
+                    <Button color="secondary" className="back-button" href="/courseinfo" >Back to course list</Button>
                     <Button color="danger" className="unenroll-button" onClick={this.unenrollUser}>Unenroll from course</Button>
                 </div>
             </div>
@@ -92,7 +92,7 @@ export default class IndividualCourse extends React.Component {
                 <div className="course-description">{this.props.course.description}</div>
                 {enrolledUserItems}
                 {adminItems}
-                {!this.props.userInCourse || this.props.isAdmin ? <Button color="primary" className="back-button" href="/courseinfo" >Back to course list</Button> : <></>}
+                {!this.props.userInCourse || this.props.isAdmin ? <Button color="secondary" className="back-button" href="/courseinfo" >Back to course list</Button> : <></>}
             </div>
         )
     }
@@ -108,29 +108,32 @@ export default class IndividualCourse extends React.Component {
                 }
             })
         })
+        let fileComponent = []
         if (ctx.currentUser) {
             const enrolledUser = new User(ctx.currentUser.email, ctx.currentUser.password, ctx.currentUser.name)
             userInCourse = await enrolledUser.isInCourse(targetCourse)
+
+            if (User.isAdmin(ctx.currentUser.email)) {
+                await storage.ref(`courseFileUploads`).child(targetCourse.id.toString()).list().then(async courseFolder => {
+                    while (courseFolder.prefixes.length > 0) {
+                        let userFolder = courseFolder.prefixes.pop()
+                        fileComponent.push([userFolder.name, []])
+                        await userFolder.list().then(async userItems => {
+                            for (let item of userItems.items) {
+                                await item.getDownloadURL().then(downloadURL => {
+                                    fileComponent[fileComponent.length-1][1].push([item.name, downloadURL])
+                                })
+                            }
+                        })
+                    }
+                })
+            } 
+            console.log(fileComponent)
+            
         }
 
         //get storage files
-        let fileComponent = []
-        if (User.isAdmin(ctx.currentUser.email)) {
-            await storage.ref(`courseFileUploads`).child(targetCourse.id.toString()).list().then(async courseFolder => {
-                while (courseFolder.prefixes.length > 0) {
-                    let userFolder = courseFolder.prefixes.pop()
-                    fileComponent.push([userFolder.name, []])
-                    await userFolder.list().then(async userItems => {
-                        for (let item of userItems.items) {
-                            await item.getDownloadURL().then(downloadURL => {
-                                fileComponent[fileComponent.length-1][1].push([item.name, downloadURL])
-                            })
-                        }
-                    })
-                }
-            })
-        }
-        console.log(fileComponent)
+        
         /* fileComponent's format
             [
                 [userName1, [

@@ -55,6 +55,12 @@
     justify-content: space-around;
 }
 
+.bottom-left-button {
+    display: flex;
+    justify-content: flex-start;
+    margin: 15px;
+}
+
 .course-description {
     margin: 15px;
 
@@ -63,6 +69,14 @@
 .course * {
     color: black;
     background-color: white;
+}
+
+Button {
+    color: white;
+}
+
+Button * {
+    color: white;
 }
 
 .base {

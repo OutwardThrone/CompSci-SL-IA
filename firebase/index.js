@@ -1,10 +1,9 @@
 import firebase from 'firebase';
-import 'firebase/'
 import 'firebase/database'
 import 'firebase/auth'
 import 'firebase/storage'
 //import {credential} from 'firebase-admin'
-import firebaseConfig from "../firebase-config.js";
+import firebaseConfig from "../firebase-config";
 
 
 if (!firebase.apps.length) {

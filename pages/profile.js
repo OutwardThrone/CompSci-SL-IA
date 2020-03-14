@@ -56,7 +56,7 @@ class ProfilePage extends React.Component {
                             </>
                          : <></>}
                          {this.props.isAdmin ? 
-                            <Button href='/courseinfo' color='primary' className='unenroll-button'>
+                            <Button href='/courseinfo' color='primary' className='bottom-left-button'>
                                 Go to all courses
                             </Button> : <></>}
                     </Row>

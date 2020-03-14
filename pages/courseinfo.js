@@ -6,7 +6,6 @@ import User from "../classes/user";
 import { Badge } from "reactstrap";
 
 const CourseInfo = props => {
-    const u = new User(props.currentUser.email, props.currentUser.password, props.currentUser.name)
     
     return (
         <>
