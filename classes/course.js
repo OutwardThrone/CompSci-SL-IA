@@ -28,6 +28,20 @@ export default class Course {
         }
     }
 
+    async getUsersInCourse() {
+        let usersInCourse = [];
+        await firestore.collection('userInfo').get().then(snap => {
+            for (let userDoc of snap.docs) {
+                if (userDoc.data().courseIds.includes(this.id)) {
+                    usersInCourse.push(userDoc.data().name)
+                }
+            }
+        }).catch(e => {
+            console.log('error finding users in course')
+        })
+        return usersInCourse
+    }
+
     static identity() {
         return new Course("", 0, "", "", "")
     }

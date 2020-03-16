@@ -1,11 +1,10 @@
-import { firestore } from "../../firebase"
-import Course from "../../classes/course"
-import User from "../../classes/user"
-import { Button, Form, FormGroup, Label, Input, FormText } from "reactstrap"
+import { firestore, storage } from "../../../firebase"
+import Course from "../../../classes/course"
+import { Button, Form, FormGroup, Label, Input, FormText, Badge } from "reactstrap"
 import Router from "next/router"
-import { storage } from "../../firebase"
+import User from "../../../classes/user"
+import Link from "next/link"
 global.XMLHttpRequest = require("xhr2");
-
 
 export default class IndividualCourse extends React.Component {
     constructor(props) {
@@ -21,9 +20,9 @@ export default class IndividualCourse extends React.Component {
         this.uploadFile = this.uploadFile.bind(this)
     }
 
-    unenrollUser() {
+    async unenrollUser() {
         const enrolledUser = new User(this.state.currentUser.email, this.state.currentUser.password, this.state.currentUser.name)
-        enrolledUser.removeFromCourse(this.state.course)
+        await enrolledUser.removeFromCourse(this.state.course)
         Router.push(`/courses/${this.state.course.id}`)
     }
 
@@ -49,17 +48,23 @@ export default class IndividualCourse extends React.Component {
 
         const adminItems = this.props.isAdmin ?
             <div>
-                <h5>Student Submitted Files</h5>
-                {this.props.uploadedFiles.map(userFile => {
+                <h5>Students Enrolled in this Course</h5>
+                {this.props.usersInCourse.map(userName => {
                     return (
                         <>
-                            <div className="file-view-name" key={`${userFile[0]}`}><b>{userFile[0]}</b>'s files</div>
-                            <div className="file-view">
-                                {userFile[1].map((indivFile, index) => {
-                                    return (
-                                        <Button className="file-button" key={index} href={indivFile[1]} color="primary" target="_blank" >{indivFile[0]}</Button>
-                                    )
-                                })}
+                            <div className="student-list" key={`${userName}`}>
+                                {this.props.userFiles[userName] > 0 ? (
+                                    <div className="student-list-entry">
+                                        <Button color="primary">
+                                            <Link href="/courses/[id]/[member]" as={`/courses/${this.props.course.id}/${userName}`} >
+                                                <a>{userName}</a>
+                                            </Link>
+                                            <h4><Badge color="success">{this.props.userFiles[userName]}</Badge></h4>
+                                        </Button>
+                                    </div>
+                                ) : <div className="student-list-entry">
+                                        <Button color="secondary">{userName}<h4><Badge color="success" >0</Badge></h4></Button>
+                                    </div>}
                             </div>
                         </>
                     )
@@ -108,27 +113,22 @@ export default class IndividualCourse extends React.Component {
                 }
             })
         })
-        let fileComponent = []
+        const usersInCourse = await targetCourse.getUsersInCourse()
+        let fileComponent = {}
         if (ctx.currentUser) {
             const enrolledUser = new User(ctx.currentUser.email, ctx.currentUser.password, ctx.currentUser.name)
             userInCourse = await enrolledUser.isInCourse(targetCourse)
-
             if (User.isAdmin(ctx.currentUser.email)) {
                 await storage.ref(`courseFileUploads`).child(targetCourse.id.toString()).list().then(async courseFolder => {
                     while (courseFolder.prefixes.length > 0) {
                         let userFolder = courseFolder.prefixes.pop()
-                        fileComponent.push([userFolder.name, []])
                         await userFolder.list().then(async userItems => {
-                            for (let item of userItems.items) {
-                                await item.getDownloadURL().then(downloadURL => {
-                                    fileComponent[fileComponent.length-1][1].push([item.name, downloadURL])
-                                })
-                            }
+                            fileComponent[userFolder.name] = userItems.items.length.toString()
                         })
                     }
                 })
             } 
-            console.log(fileComponent)
+            //console.log(fileComponent)
             
         }
 
@@ -136,21 +136,13 @@ export default class IndividualCourse extends React.Component {
         
         /* fileComponent's format
             [
-                [userName1, [
-                    [fileName1, fileURL1], 
-                    [fileName2, fileURL2], 
-                    [...]
-                ]],
+                [userName1, filesLength],
 
-                [userName2, [
-                    [fileName1, fileURL1], 
-                    [fileName2, fileURL2], 
-                    [...]
-                ]]
+                [userName2, filesLength]
             ]
                 
         */
 
-        return { course: targetCourse, userInCourse: userInCourse, uploadedFiles: fileComponent}
+        return { course: targetCourse, userInCourse: userInCourse, userFiles: fileComponent, usersInCourse: usersInCourse}
     }
 }

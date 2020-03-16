@@ -75,7 +75,33 @@ Button {
     color: white !important;
 }
 
+.student-list-entry * {
+    display: inline;
+    margin: 5px;
+}
+
+.student-list-entry {
+    border-left: 1px solid black;
+}
+
+.student-list-entry:hover {
+    border-left: 1px dashed grey;
+}
+
+.student-list {
+    margin: 20px;
+}
+
 Button * {
+    color: white !important;
+}
+
+Button:hover * {
+    color: white !important;
+    text-decoration: none !important;
+}
+
+a.btn {
     color: white !important;
 }
 

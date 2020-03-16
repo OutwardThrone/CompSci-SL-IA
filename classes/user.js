@@ -61,7 +61,8 @@ export default class User {
         })
         courseIds.push(course.id.toString())
         await firestore.collection('userInfo').doc(this.email).set({
-            'courseIds': courseIds
+            'courseIds': courseIds,
+            "name": this.name
         }).catch(e => {
             console.log("error adding course", e)
             isSuccess = false;

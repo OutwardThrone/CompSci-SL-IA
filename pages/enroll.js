@@ -37,6 +37,11 @@ const Enrollment = props => {
                 Successfully enrolled into <strong>{props.selectedCourse}</strong>
                 <br/>
                 <Button color="success" href="/enroll" style={{margin: "10px", "marginTop": "20px"}}><a>Enroll In Another Course</a></Button>
+                {props.targetCourse ? 
+                <Button color="primary" style={{margin: "10px", "marginTop": "20px"}}>
+                    <Link href="/courses/[id]" as={`courses/${props.targetCourse.id}`}><a>Go to Course</a></Link>
+                </Button> 
+                : <></>}
             </div>
         )
     }
@@ -47,10 +52,12 @@ Enrollment.getInitialProps = async function(ctx) {
     const { courseKey, selectCourse } = query;
     let isInvalidKey, isSuccess = false
     const currentUser = new User(ctx.currentUser.email, ctx.currentUser.password, ctx.currentUser.name)
+    let targetCourse = null
     for (let course of ctx.availableCourses)  {
         if (course.name == selectCourse) {
             if (course.enrollKey.toUpperCase() == courseKey.toUpperCase()) {
                 //add course to user in firestore
+                targetCourse = course
                 isSuccess = await currentUser.enrollInCourse(course)
                 break;
             } else {
@@ -58,7 +65,7 @@ Enrollment.getInitialProps = async function(ctx) {
             }
         }
     }
-    return {invalidKey: isInvalidKey, success: isSuccess, selectedCourse: selectCourse}
+    return {invalidKey: isInvalidKey, success: isSuccess, selectedCourse: selectCourse, targetCourse: targetCourse}
 }
 
 export default Enrollment
