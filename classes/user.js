@@ -12,11 +12,17 @@ export default class User {
     }
 
     
-
+    /**
+     * Static method, returns true if email is admin, false if not.
+     * @param {String} email a user's email
+     */
     static isAdmin(email) {
         return admins.includes(email)
     }
 
+    /**
+     * returns true if current user has a document in "userInfo" in firestore
+     */
     async userInFirestore() {
         let bool = false
         await firestore.collection('userInfo').get().then(snap => {
@@ -29,6 +35,10 @@ export default class User {
         return bool;
     }
 
+    /**
+     * Returns true if user is in the course
+     * @param {Course} course the course to check
+     */
     async isInCourse(course) {
         
         let inCourse = false
@@ -41,6 +51,9 @@ export default class User {
         return inCourse;
     }
 
+    /**
+     * returns array of all course ids that user is enrolled in.
+     */
     async getCurrentCourses() {
         let currentCourses = []
         await firestore.collection('userInfo').doc(this.email).get().then(doc => {
@@ -53,6 +66,10 @@ export default class User {
         return currentCourses;
     }
 
+    /**
+     * enrolls the user in the course
+     * @param {Course} course 
+     */
     async enrollInCourse(course) {
         console.log(`setting course: ${course.name} to ${this.email}`)
         let isSuccess = true;
@@ -70,6 +87,10 @@ export default class User {
         return isSuccess;
     }
 
+    /**
+     * removes the user from the course
+     * @param {Course} course 
+     */
     async removeFromCourse(course) {
         let courseIds = await this.getCurrentCourses()
         courseIds = courseIds.filter((val, index, arr) => {
@@ -82,6 +103,11 @@ export default class User {
         })
     }
 
+    /**
+     * Stores a file inside a course folder in Firebase Storage
+     * @param {Course} course 
+     * @param {File} file 
+     */
     async storeFile(course, file) {
         let uploadRes = "Upload Failed"
         await storage.ref(`courseFileUploads/${course.id}/${this.name}/${file.name}`).put(file).then(uploadSnap => {
@@ -95,6 +121,10 @@ export default class User {
         return uploadRes
     }
 
+    /**
+     * Returns a course array of all the courses a user is in. Not just the ids which getCurrentCourses() does
+     * @param {Course[]} availableCourses 
+     */
     async retrieveCourses(availableCourses) {
         const inFireStore = await this.userInFirestore()
         if (!inFireStore) {
@@ -114,7 +144,9 @@ export default class User {
         }
     }
 
-    // creates blank user
+    /**
+     * returns a blank user
+     */
     static identity() {
         return new User("", "", "");
     }

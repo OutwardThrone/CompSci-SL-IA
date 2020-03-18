@@ -48,7 +48,7 @@ export default class IndividualCourse extends React.Component {
 
         const adminItems = this.props.isAdmin ?
             <div>
-                <h5>Students Enrolled in this Course</h5>
+                {this.props.usersInCourse.length > 0 ? <h5>Students Enrolled in this Course</h5> : <></>}
                 {this.props.usersInCourse.map(userName => {
                     return (
                         <>

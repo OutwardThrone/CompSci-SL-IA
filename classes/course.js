@@ -9,10 +9,6 @@ export default class Course {
         this.enrollKey = enrollKey
     }
 
-    enrollUser(user) {
-        this.enrolledUsers.push(user)
-    }
-
     static courseConverter = {
         toFirestore: function(course) {
             return {
