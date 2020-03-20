@@ -6,7 +6,17 @@ import User from "../../../classes/user"
 import Link from "next/link"
 global.XMLHttpRequest = require("xhr2");
 
+
+/**
+ * This class handles a specific course view.
+ * If a stranger or unenrolled student views the file, they only see the name, description and return to course button
+ * If an enrolled user visits this page, they will see the upload file button and if an admin visits the site, they see a list of all students which redirects to their uploaded files.
+ */
 export default class IndividualCourse extends React.Component {
+
+    /**
+     * The class states holds the current file, user, course, and result.
+     */
     constructor(props) {
         super(props)
         this.state = {
@@ -20,18 +30,28 @@ export default class IndividualCourse extends React.Component {
         this.uploadFile = this.uploadFile.bind(this)
     }
 
+    /**
+     * This calls the user method to remove a user from the course.
+     */
     async unenrollUser() {
         const enrolledUser = new User(this.state.currentUser.email, this.state.currentUser.password, this.state.currentUser.name)
         await enrolledUser.removeFromCourse(this.state.course)
         Router.push(`/courses/${this.state.course.id}`)
     }
 
+    /**
+     * The on change event for the upload file button.
+     * Stores the selected file for when the submit button is clicked
+     */
     onChangeHandler(event) {
         this.setState({
             currentFile: event.target.files[0]
         })
     }
 
+    /**
+     * When the upload button is clicked, it pushes the selected file to firebase storage in the respective folder.
+     */
     async uploadFile() {
         if (this.state.currentFile) {
             this.setState({
@@ -102,6 +122,9 @@ export default class IndividualCourse extends React.Component {
         )
     }
 
+    /**
+     * retrieves the target course and all the users with their dynamic routes in the course.
+     */
     static async getInitialProps(ctx) {
         const { id, fileSubmission } = ctx.query
         let targetCourse = null;

@@ -5,6 +5,9 @@ import Link from "next/link";
 import User from "../classes/user";
 import { Badge } from "reactstrap";
 
+/**
+ * Lists out all available courses and shows the enrolled tag if enrolled
+ */
 const CourseInfo = props => {
     
     return (
@@ -25,6 +28,9 @@ const CourseInfo = props => {
     )
 }
 
+/**
+ * retrieves all course info from the available courses from firestore
+ */
 CourseInfo.getInitialProps = async function(ctx) {
     let courseInfo = []
     if (ctx.currentUser) {

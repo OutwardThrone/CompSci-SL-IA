@@ -4,12 +4,16 @@ import { firestore } from '../firebase'
 import Course from "../classes/course"
 import User from "../classes/user"
 
+/**
+ * Handles enrolling a student account in a course.
+ * Uses boostrap form to create dropdown.
+ * Makes sure the enrollment key is correct and displays the success page if matches.
+ */
 const Enrollment = props => {
     if (!props.success) {
         const u = new User(props.currentUser.email, props.currentUser.password, props.currentUser.name)
         return (
             <Form className="submission-form">
-                {/*MAKE DIS A FORM WHERE PERSON CHOOSE FROM DROPDOWN WITH ALL AVAILALBE COURSES. THEN COURSE KEY WHICH IS PARAM IN COURSES*/}
                 Sign up for a course with a specified course key (instructor should provide this key)
                 <FormGroup>
                     <Label>Choose a course</Label>

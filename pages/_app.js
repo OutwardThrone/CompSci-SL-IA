@@ -14,12 +14,21 @@ import Course from '../classes/course.js';
 
 //Router.events.on('')
 
+/**
+ * Handls all page loads.
+ * Retrieves all availableCourses and currentUser from the cookies and passes it down the site.
+ */
 class MyApp extends App {
 
     constructor(props) {
         super(props)
     }
 
+    /**
+     * Overrides all page on loads
+     * Calls the page getInitialsProps and the nav bar's getInitialProps
+     * Checks if the user is admin and returns that variable to the components
+     */
     static async getInitialProps(appctx) {
         const {ctx} = appctx
 
@@ -39,12 +48,14 @@ class MyApp extends App {
         return {currentUser: currentUser || User.identity(), ...appProps, ...navProps, availableCourses: availableCourses, isAdmin: isAdminBool}
     }
 
+    /**
+     * Makes availables courses, is admin, and all props accessible to the components on the page
+     */
     render() {
         const {Component, pageProps, currentUser, navProps, availableCourses, isAdmin} = this.props;
         return (
             <div>
                 <Head>
-                    {/*do stuff here*/}
                     <title>Coding Class</title>
                     <script src="https://kit.fontawesome.com/27622bad5b.js" crossOrigin="anonymous"></script>
                 </Head>

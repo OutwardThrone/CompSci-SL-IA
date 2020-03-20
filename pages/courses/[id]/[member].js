@@ -5,6 +5,10 @@ import Router from "next/router"
 import User from "../../../classes/user"
 import Link from "next/link"
 
+/**
+ * This page dynamically routes the course id and the member name to show file from. Get initial props finds the target course and target member's files.
+ * And the function returns the files so they can be clicked and downloaded. 
+ */
 const MemberPage = props => {
     return (
         <div className="inner-text">

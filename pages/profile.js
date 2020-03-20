@@ -5,6 +5,11 @@ import cookies from "next-cookies";
 import { Container, Row, Col, Button } from "reactstrap";
 import Link from "next/link";
 
+
+/**
+ * Adds logged in users to the cookies and if already there, displays user information such as email and courses
+ * Admin account has go to courses button
+ */
 class ProfilePage extends React.Component {
     constructor(props) {
         super(props);
@@ -12,14 +17,13 @@ class ProfilePage extends React.Component {
 
     static async getInitialProps(ctx) {
         const {query, req} = ctx
-        const u = cookies(ctx).currentUser || await JSON.parse(decodeURIComponent(query.user))
+        const u = cookies(ctx).currentUser || JSON.parse(decodeURIComponent(query.user))
         const currentUser = new User(u.email, u.password, u.name)
         const courses = await currentUser.retrieveCourses(ctx.availableCourses)
         return {user: u, courses: courses}//{name: query.name, email: query.email, password: query.password}
     }
 
     componentDidMount() {
-        //Cookies.set("currentUser", JSON.stringify(this.props.user))
         if (document.cookie.currentUser != JSON.stringify(this.props.user)) {
             document.cookie = `currentUser=${JSON.stringify(this.props.user)}; path="/"`
             Router.push(`/profile`)

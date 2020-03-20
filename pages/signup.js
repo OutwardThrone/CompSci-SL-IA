@@ -6,6 +6,10 @@ import { auth } from '../firebase';
 import redirect from 'next-redirect'
 import User from '../classes/user';
 
+/**
+ * Signs up for a course using firebase auth.
+ * On successfull signup, redirects to /profile
+ */
 class SignUp extends React.Component {
     constructor(props) {
         super(props);

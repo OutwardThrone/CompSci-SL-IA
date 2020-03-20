@@ -1,3 +1,7 @@
+
+/**
+ * Home page with course info and contact info.
+ */
 const HomePage = props => {
     return (
         <div className="inner-text">

@@ -9,7 +9,10 @@ import User from '../classes/user';
 import Cookies from 'js-cookie';
 
 
-
+/**
+ * Handles logging in using firebase auth.
+ * On successfull login, redirected to the /profile page.
+ */
 class LoginPage extends React.Component {
 
     static DEFAULT_STATUS = ""
@@ -29,9 +32,8 @@ class LoginPage extends React.Component {
     static async getInitialProps(ctx) {
         let {query} = ctx
         let currentUser = new User(query.email, query.password);
-       // console.log(User.identity().email)
-        //console.log("s;dlkfj")
         if (query.email && query.password) {
+            //entered email and password
             return await auth.signInWithEmailAndPassword(query.email, query.password).then((userCreds) => { //https://firebase.google.com/docs/reference/js/firebase.auth.Auth.html?authuser=0#sign-inwith-email-and-password
                 let {credential, user} = userCreds
                 console.log("successfully logged in");
@@ -55,6 +57,7 @@ class LoginPage extends React.Component {
                 }
             });
         }
+        //nothing entered, return default status
         return {user: User.identity(), emailInvalid: false, passwordInvalid: false, status: this.DEFAULT_STATUS}
     }
 

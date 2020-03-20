@@ -9,6 +9,9 @@ export default class Course {
         this.enrollKey = enrollKey
     }
 
+    /**
+     * firestore data converter
+     */
     static courseConverter = {
         toFirestore: function(course) {
             return {
@@ -24,6 +27,9 @@ export default class Course {
         }
     }
 
+    /**
+     * returns a list of names of the users in the specific course
+     */
     async getUsersInCourse() {
         let usersInCourse = [];
         await firestore.collection('userInfo').get().then(snap => {
@@ -38,6 +44,9 @@ export default class Course {
         return usersInCourse
     }
 
+    /**
+     * returns and empty course.
+     */
     static identity() {
         return new Course("", 0, "", "", "")
     }
